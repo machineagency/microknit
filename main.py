@@ -45,10 +45,12 @@ while True:
         INSIDE_CAMS = 1
         needle_counter.update()
         print(needle_counter.value)
-        if needle_counter.value%3 == 0:
+        if needle_counter.value%3 == 1:
             LED.on()
+            OUT.on()
         else:
             LED.off()
+            OUT.off()
     
     #if we have left the cams:
     elif CAMS.value() == 0:
@@ -56,6 +58,7 @@ while True:
         needle_counter.reset()
         
     
+
 
 
     
