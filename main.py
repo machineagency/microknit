@@ -13,6 +13,7 @@ DIRECTION = Pin(26, Pin.IN)	#DIN 5 direction, low = going right, high= left
 #				#DIN 6 possibly power, don't connect this
 #				#DIN 7 also possibly power
 
+OUT.off()
 CURRENT_DIRECTION = 0 #0 is going right 1 is going left
 INSIDE_CAMS = 0
 CURRENT_NEEDLE = 0
@@ -28,7 +29,6 @@ while True:
 #    time.sleep(0.05)
 
     
-    OUT.off()
     CURRECT_DIRECTION = 0
     INSIDE_CAMS = 0
     
@@ -44,7 +44,6 @@ while True:
     if CAMS.value() == 1:
         INSIDE_CAMS = 1
         needle_counter.update()
-        print(needle_counter.value)
         if needle_counter.value%3 == 1:
             LED.on()
             OUT.on()
