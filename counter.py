@@ -17,7 +17,11 @@ class Counter:
     def value(self, val):
         self._value = val
 
-    def reset(self):
+    def reset(self, init=None, d=None):
+        if init is not None:
+            self._init = init
+        if d is not None:
+            self._d = d
         self.value = self._init
 
     def update(self):
