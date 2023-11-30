@@ -1,0 +1,14 @@
+{
+    "wifi": {
+        "ssid": "UW MPSK",
+        "password": "HNmGRT4Y!y",
+        "attempts": 20,
+        "delay_in_msec": 100
+    },
+    "esphub": {
+        "server": "esphub.mehtank.com",
+        "use_ssl": true,
+        "socket_delay_ms": 5
+    },
+    "led_pin": 2
+}
