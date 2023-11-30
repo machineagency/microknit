@@ -1,4 +1,4 @@
-from silversend import Silversend
+from py.silversend import Silversend
 
 
 print("we can do things and we're starting")

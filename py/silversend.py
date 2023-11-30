@@ -1,5 +1,5 @@
 from machine import Pin
-from counter import Counter
+from .counter import Counter
 
 
 LED     = 2
