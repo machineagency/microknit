@@ -11,7 +11,7 @@ async def connect(ssid, password, attempts = 100, delay_in_msec = 200, stretch=1
     wifi.active(1)
 
     for i in range(attempts):
-        print(f"WiFi connecting to <{ssid}> with password -- Attempt {i}.")
+        print(f"WiFi connecting to <{ssid}> with password <{password}> -- Attempt {i}.")
         if wifi.status() != network.STAT_CONNECTING:
             wifi.connect(ssid, password)
         await a.sleep_ms(int(delay_in_msec))
