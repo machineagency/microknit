@@ -116,7 +116,7 @@ class ESPHub(Client):
         fns = (
             lambda k, v: k,
             lambda k, v: v["name"],
-            lambda k, v: "%08x" % v["mac"],
+            lambda k, v: isinstance(v["mac"], str) and v or "%08x" % v["mac"],
             lambda k, v: v["ip"],
         )
         tests = (
