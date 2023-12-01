@@ -1,6 +1,5 @@
 import network
 from ubinascii import hexlify
-import uasyncio as a
 
 from .ablink import blink
 from .sio import SocketIOClient
@@ -20,12 +19,7 @@ async def esphub(server, use_ssl=True, socket_delay_ms=5, led_pin=2):
                                    ))
 
     @sio.on("blink")
-    async def ablink(data, sid):
-        await blink(pin=led_pin)
-
-    @sio.on("blink")
     async def dblblink(data, sid):
-        await a.sleep_ms(1000)
         await blink(50,50,pin=led_pin)
         await blink(50,50,pin=led_pin)
     

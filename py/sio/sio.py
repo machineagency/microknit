@@ -39,6 +39,7 @@ class SocketIOClient(AsyncWebsocketClient):
         self._sio_connected = False
 
         self._event_handlers = {}
+        self._rxloop = None
 
     async def eio_connect(self):
         path = "socket.io/?EIO=4"
@@ -70,13 +71,18 @@ class SocketIOClient(AsyncWebsocketClient):
         LOGGER.debug("Connecting to socket.io...")
         await self._send_message(MESSAGE_CONNECT)
         self._sio_connected = True
-        return a.create_task(self.rxloop())
+        self._rxloop = a.create_task(self.rxloop())
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc, tb):
         self.close()
+
+    async def close(self):
+        if self._rxloop:
+            await self._rxloop.close()
+        AsyncWebsocketClient.close(self)
 
     async def emit(self, event, data):
         await self._send_message(MESSAGE_EVENT, (event, data))
