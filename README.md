@@ -16,3 +16,10 @@ Git clone this repo then:
 - `$ ampy run py/install.py`
 - `$ ampy put py`
 - `$ ampy put main.py`
+
+## Communications to ESP from client
+
+- `$ cd client/`
+- `$ pip install -r requirements.txt`
+- `$ python3 client.py`
+
