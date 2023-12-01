@@ -13,7 +13,7 @@ RIGHT, LEFT = 0, 1
 
 class Silversend:
 
-    def __init__(self, lcam, rcam, led=LED, clock=CLOCK, cams=CAMS, out=OUT, needle=NEEDLE, direction=DIRECTION):
+    def __init__(self, lcam, rcam, newrow=None, rowcomplete=None, led=LED, clock=CLOCK, cams=CAMS, out=OUT, needle=NEEDLE, direction=DIRECTION):
         self.led = Pin(led, Pin.OUT)
         self.clock = Pin(clock, Pin.IN)          #DIN 1 ???
         self.cams = Pin(cams, Pin.IN)            #DIN 2 High inside point cams 
@@ -30,13 +30,10 @@ class Silversend:
 
         self.needle_counter = Counter(self.needle, init=lcam, d=1) #first needle will be needle 1
 
-        def newrow(row, pin):
-            print(f"now on row {row}")
             
         self.row_counter = Counter(self.cams, init=0, d=1, callback=newrow) #first row will be row 1
         
-        def rowcomplete(row, pin):
-            print(f"row {row} completed!")
+
         
         self.row_complete = Counter(self.cams, init=0, d=1, rising=False, falling=True, callback=rowcomplete)        
 
