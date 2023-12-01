@@ -28,18 +28,31 @@ class Silversend:
 
         self.out.off()
 
-        self.needle_counter = Counter(self.needle, init=lcam, d=1)
+        self.needle_counter = Counter(self.needle, init=lcam, d=1) #first needle will be needle 1
+
+        def newrow(row, pin):
+            print(f"now on row {row}")
+            
+        self.row_counter = Counter(self.cams, init=0, d=1, callback=newrow) #first row will be row 1
+        
+        def rowcomplete(row, pin):
+            print(f"row {row} completed!")
+        
+        self.row_complete = Counter(self.cams, init=0, d=1, rising=False, falling=True, callback=rowcomplete)        
 
     def load(self, line):
         self.line = line
 
     def update(self):
+        self.row_counter.update()
+        self.row_complete.update()
         #Are we in the cams? yes
         if self.cams.value() == 1:
             self.needle_counter.update()
             self.output()
         #if we have left the cams:
         else:
+            #print(self.row_counter.value)
             if self.direction.value() == RIGHT:
                 self.needle_counter.reset(self.lcam, 1)
             else:

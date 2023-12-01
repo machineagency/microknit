@@ -21,6 +21,12 @@ async def main():
     s.load(pattern)
 
     print("we can do things and we're starting")
+
+    @hub.on("row")
+    async def row(data, sid):
+        s.load(data)
+        print(f"we got a row, which is {data}. Dope!")
+
     while True:
         try:
             s.update()
@@ -28,5 +34,7 @@ async def main():
         except KeyboardInterrupt:
             print("Received exit, exiting")
             hub.close()
+            break
+            
 
 a.run(main())

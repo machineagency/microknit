@@ -18,9 +18,11 @@ async def esphub(server, use_ssl=True, socket_delay_ms=5, led_pin=2):
                                     ip  = wifi.ifconfig()[0],
                                    ))
 
+    # Socket IO on event... this is also how you make more events
     @sio.on("blink")
     async def dblblink(data, sid):
         await blink(50,50,pin=led_pin)
         await blink(50,50,pin=led_pin)
+   
     
     return sio
