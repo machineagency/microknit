@@ -129,8 +129,8 @@ class SocketIOClient(AsyncWebsocketClient):
 
     def _handle_message(self, message_type, data):
         if message_type == MESSAGE_EVENT:
-            event, data, sid = json.loads(data)
-            self._handle_event(event, data, sid)
+            event, data, *sid = json.loads(data)
+            self._handle_event(event, data, sid and sid[0] or None)
 
         elif message_type == MESSAGE_ERROR:
             LOGGER.error(f"Error: {data}")
