@@ -1,28 +1,39 @@
 import network
+import uasyncio as a
 from ubinascii import hexlify
 
 from .ablink import blink
 from .sio import SocketIOClient
 
 
-async def esphub(server, use_ssl=True, socket_delay_ms=5, led_pin=2):
-    print("Create SocketIO instance...")
-    sio = SocketIOClient(server, use_ssl, socket_delay_ms=socket_delay_ms)
-    print("Created...")
-    await sio.connect()
-    print("Connected...")
+class ESPHub(SocketIOClient):
 
-    wifi = network.WLAN()
-    await sio.emit("register", dict(name= "mpy",
-                                    mac = hexlify(wifi.config('mac'), ':').decode().upper(),
-                                    ip  = wifi.ifconfig()[0],
-                                   ))
+    def __init__(self, server, use_ssl=True, socket_delay_ms=5, led_pin=2):
+        print("Create SocketIO instance...")
+        SocketIOClient.__init__(self, server, use_ssl, socket_delay_ms=socket_delay_ms)
+        print("Created.")
+        self.led_pin = led_pin
 
-    # Socket IO on event... this is also how you make more events
-    @sio.on("blink")
-    async def dblblink(data, sid):
-        await blink(50,50,pin=led_pin)
-        await blink(50,50,pin=led_pin)
-   
-    
-    return sio
+    async def connect(self):
+        await SocketIOClient.connect(self)
+        wifi = network.WLAN()
+        print("Registering on ESPHub...")
+        await self.emit("register", dict(name= "mpy",
+                                        mac = hexlify(wifi.config('mac'), ':').decode().upper(),
+                                        ip  = wifi.ifconfig()[0],
+                                       ))
+
+        # Socket IO on event... this is also how you make more events
+        @self.on("blink")
+        async def dblblink(data, sid):
+            await blink(50,50,pin=self.led_pin)
+            await blink(50,50,pin=self.led_pin)
+
+    def command(self, event, who, data=None):
+        for sid in who:
+            tosend=dict(sid=sid, event=event, data=data)
+            a.create_task(self.emit('command',tosend))
+            # print(f"Emitting data {tosend}")
+
+    def __getattr__(self, fn):
+        return lambda *args, **kwargs: self.command(fn, *args, **kwargs)

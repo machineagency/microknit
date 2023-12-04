@@ -37,6 +37,8 @@ class SocketIOClient(AsyncWebsocketClient):
         self._ssl = use_ssl
         self._eio_connected = False
         self._sio_connected = False
+        self._eio_sid = None
+        self._sio_sid = None
 
         self._event_handlers = {}
         self._rxloop = None
@@ -49,7 +51,8 @@ class SocketIOClient(AsyncWebsocketClient):
         data = json.loads(ret[1:]) ## EIO body
 
         path += '&sid=' + data['sid']
-        LOGGER.debug(f"sid = {data['sid']}")
+        self._eio_sid = data['sid']
+        LOGGER.debug(f"Engine.io connected with sid = {data['sid']}")
 
         LOGGER.debug("Setting up websocket connection...")
         ret = await self.handshake(f'{self._ssl and "wss" or "ws"}://{self._host}/{path}&transport=websocket')
@@ -99,18 +102,15 @@ class SocketIOClient(AsyncWebsocketClient):
         return decode_packet(line)
 
     async def _handle_packet(self, packet_type, data):
-        print("handle type:", packet_type)
         if packet_type is None:
-            LOGGER.info("None")
             pass
 
         elif packet_type == PACKET_MESSAGE:
-            LOGGER.info("Message")
             message_type, data = decode_packet(data)
             self._handle_message(message_type, data)
 
         elif packet_type == PACKET_CLOSE:
-            LOGGER.info("Socket.io closed")
+            LOGGER.info("Engine.io closed")
             self.close()
 
         elif packet_type == PACKET_PING:
@@ -121,7 +121,6 @@ class SocketIOClient(AsyncWebsocketClient):
             LOGGER.debug("< pong")
 
         elif packet_type == PACKET_NOOP:
-            LOGGER.debug("noop")
             pass
 
         else:
@@ -129,23 +128,28 @@ class SocketIOClient(AsyncWebsocketClient):
 
     def _handle_message(self, message_type, data):
         if message_type == MESSAGE_EVENT:
-            event, data, sid = json.loads(data)
-            self._handle_event(event, data, sid)
+            event, data, *sid = json.loads(data)
+            self._handle_event(event, data, sid and sid[0] or None)
 
         elif message_type == MESSAGE_ERROR:
             LOGGER.error(f"Error: {data}")
 
         elif message_type == MESSAGE_DISCONNECT:
-            LOGGER.info("Disconnected")
+            LOGGER.info("Socket.io disconnected")
             self.close()
+
+        elif message_type == MESSAGE_CONNECT:
+            data = json.loads(data)
+            self._sio_sid = data["sid"]
+            LOGGER.info(f"Socket.io connected with sid = {self._sio_sid}")
 
         else:
             LOGGER.warning(f"Unhandled message {message_type}: {data}")
 
     def _handle_event(self, event, data=None, sid=None):
-        LOGGER.debug(f"Handling event '{event}' with data {data} from SID {sid}")
+        #LOGGER.debug(f"Handling event '{event}' with data {data} from SID {sid}")
         for handler in self._event_handlers.get(event, []):
-            LOGGER.debug(f"Calling handler {handler}")
+            LOGGER.debug(f"Calling handler {handler} for event {event}")
             a.create_task(handler(data, sid))
 
     async def _send_packet(self, packet_type, data=''):
