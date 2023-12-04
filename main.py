@@ -31,10 +31,16 @@ async def main():
 
     s = Silversend(-20, 20, newrow=newrow, rowcomplete=rowcomplete)
 
-    pattern = [0, 1, 0, 0] * 10
+    pattern = [0, 1] * 20
     s.loadrow(pattern)
 
     print("we can do things and we're starting")
+
+    # Socket IO on event... this is also how you make more events
+    @hub.on("setcams")
+    async def row(data, sid):
+        s.setcams(*data)
+        print(f"we are resetting the cam positions to {data}. Dope!")
 
     # Socket IO on event... this is also how you make more events
     @hub.on("setrowindex")
