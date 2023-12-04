@@ -28,13 +28,13 @@ class Silversend:
 
         self.out.off()
 
+        # Edge-triggered counters:
+
+        # rising edge of needle pin -> triggers as soon as we finish moving over needle
         self.needle_counter = Counter(self.needle, init=lcam, d=1) #first needle will be needle 1
-
-            
+        # rising edge of cams pin -> triggers as soon as we start a row
         self.row_counter = Counter(self.cams, init=0, d=1, callback=newrow) #first row will be row 1
-        
-
-        
+        # falling edge of cams pin -> triggers as soon as we finish a row
         self.row_complete = Counter(self.cams, init=0, d=1, rising=False, falling=True, callback=rowcomplete)        
 
     def load(self, line):
