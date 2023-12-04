@@ -23,8 +23,7 @@ class Silversend:
                                                  #DIN 6 power +5V
                                                  #DIN 7 power +5V
 
-        self.lcam = lcam
-        self.rcam = rcam-1 # because 0 is not a numbered needle on the silver reed machine
+        self.setcams(lcam, rcam)
 
         self.out.off()
 
@@ -39,7 +38,7 @@ class Silversend:
 
     def setcams(self, lcam, rcam):
         self.lcam = lcam
-        self.rcam = rcam
+        self.rcam = rcam-1 # because 0 is not a numbered needle on the silver reed machine
 
     def setrowindex(self, row):
         self.row_counter.value = row
