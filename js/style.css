@@ -1,0 +1,56 @@
+@font-face {
+  font-family: "National Park";
+  src: url("/assets/fonts/NP-VariableVF.woff2")
+      format("woff2 supports variations"),
+    url("/assets/fonts/NP-VariableVF.woff2") format("woff2-variations");
+}
+
+body {
+  background: #fafafa;
+  color: #232323;
+  font-family: "National Park";
+}
+
+.chart-container {
+  display: flex;
+}
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  line-height: 0;
+}
+
+.row {
+  display: flex;
+  flex: 0 1;
+  outline: 1px solid black;
+}
+
+.row:hover {
+  outline: 3px solid black;
+  z-index: 10;
+}
+
+.row.highlighted {
+  outline: 5px solid black;
+  z-index: 10;
+}
+
+.row.inprogress {
+  outline: 3px solid red;
+  z-index: 10;
+}
+
+.row-label {
+  background-color: white;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.row .stitch {
+  aspect-ratio: 1;
+  border-left: 1px solid black;
+}
