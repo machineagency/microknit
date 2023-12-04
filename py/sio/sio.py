@@ -147,9 +147,9 @@ class SocketIOClient(AsyncWebsocketClient):
             LOGGER.warning(f"Unhandled message {message_type}: {data}")
 
     def _handle_event(self, event, data=None, sid=None):
-        LOGGER.debug(f"Handling event '{event}' with data {data} from SID {sid}")
+        #LOGGER.debug(f"Handling event '{event}' with data {data} from SID {sid}")
         for handler in self._event_handlers.get(event, []):
-            LOGGER.debug(f"Calling handler {handler}")
+            LOGGER.debug(f"Calling handler {handler} for event {event}")
             a.create_task(handler(data, sid))
 
     async def _send_packet(self, packet_type, data=''):

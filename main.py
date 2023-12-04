@@ -20,7 +20,7 @@ async def main():
     await hub.connect()
 
     def newrow(row, pin):
-        print(f"now on row {row}")
+        # print(f"now on row {row}")
         # Socket IO send event "rowstart" with data=row to every client in array sids
         hub.rowstart(sids, row)
 

@@ -54,7 +54,11 @@ class Silversend:
         #Are we in the cams? yes
         if self.cams.value() == 1:
             self.needle_counter.update()
-            self.output()
+            try:
+                self.output()
+            except IndexError:
+                print(f"Index Error: {self.lcam}, {self.needle_counter.value}, {self.rcam}")
+
         #if we have left the cams:
         else:
             #print(self.row_counter.value)
