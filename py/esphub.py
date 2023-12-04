@@ -31,9 +31,9 @@ class ESPHub(SocketIOClient):
 
     def command(self, event, who, data=None):
         for sid in who:
-            data=dict(sid=sid, event=event, data=data)
-            a.create_task(self.emit('command',data))
-            print(f"Emitting data {data}")
+            tosend=dict(sid=sid, event=event, data=data)
+            a.create_task(self.emit('command',tosend))
+            print(f"Emitting data {tosend}")
 
     def __getattr__(self, fn):
         return lambda *args, **kwargs: self.command(fn, *args, **kwargs)
