@@ -37,7 +37,11 @@ class Silversend:
         # falling edge of cams pin -> triggers as soon as we finish a row
         self.row_complete = Counter(self.cams, init=0, d=1, rising=False, falling=True, callback=rowcomplete)        
 
-    def load(self, line):
+    def setrowindex(self, row):
+        self.row_counter.value = row
+        self.row_complete.value = row
+
+    def loadrow(self, line):
         self.line = line
 
     def update(self):
