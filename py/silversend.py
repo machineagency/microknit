@@ -16,10 +16,10 @@ class Silversend:
     def __init__(self, lcam, rcam, newrow=None, rowcomplete=None, led=LED, clock=CLOCK, cams=CAMS, out=OUT, needle=NEEDLE, direction=DIRECTION):
         self.led = Pin(led, Pin.OUT)
         self.clock = Pin(clock, Pin.IN)          #DIN 1 ???
-        self.cams = Pin(cams, Pin.IN)            #DIN 2 High inside point cams 
+        self.cams = Pin(cams, Pin.IN)            #DIN 2 High inside point cams
         self.out = Pin(out, Pin.OUT)             #DIN 3 output high when slip
-        self.needle = Pin(needle, Pin.IN)        #DIN 4 goes low whenever a needle is passed 
-        self.direction = Pin(direction, Pin.IN)  #DIN 5 direction, low = going right, high= left 
+        self.needle = Pin(needle, Pin.IN)        #DIN 4 goes low whenever a needle is passed
+        self.direction = Pin(direction, Pin.IN)  #DIN 5 direction, low = going right, high= left
                                                  #DIN 6 power +5V
                                                  #DIN 7 power +5V
 
@@ -33,9 +33,9 @@ class Silversend:
         # rising edge of needle pin -> triggers as soon as we finish moving over needle
         self.needle_counter = Counter(self.needle, init=lcam, d=1) #first needle will be needle 1
         # rising edge of cams pin -> triggers as soon as we start a row
-        self.row_counter = Counter(self.cams, init=0, d=1, callback=newrow) #first row will be row 1
+        self.row_counter = Counter(self.cams, init=-1, d=1, callback=newrow) #first row will be row 0 because it increments once from init
         # falling edge of cams pin -> triggers as soon as we finish a row
-        self.row_complete = Counter(self.cams, init=0, d=1, rising=False, falling=True, callback=rowcomplete)        
+        self.row_complete = Counter(self.cams, init=-1, d=1, rising=False, falling=True, callback=rowcomplete)
 
     def setrowindex(self, row):
         self.row_counter.value = row
@@ -60,7 +60,12 @@ class Silversend:
                 self.needle_counter.reset(self.rcam, -1)
 
     def output(self):
-        if self.line[self.needle_counter.value]:
+        if (self.needle_counter.value < self.lcam) or (self.needle_counter.value > self.rcam):
+            print(f"Needle index {self.needle_counter.value} is outside cam range ({self.lcam}..{self.rcam})")
+            print("  -> defaulting to regular knit")
+            self.led.off()
+            self.out.off()
+        elif self.line[self.needle_counter.value - self.lcam]:
             self.led.on()
             self.out.on()
         else:
