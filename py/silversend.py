@@ -54,6 +54,7 @@ class Silversend:
 
     def loadrow(self, line):
         self.line = line
+        self.line_length = len(line)
 
     def update(self):
         self.debug2.value(1)
@@ -77,14 +78,16 @@ class Silversend:
 
     def needle_irq(self, pin):
         #Are we in the cams? yes
-        if self.cams.value() == 1:
-            try:
-                self.led.value(bool(self.line[self.needle_index - self.lcam]))
-                self.out.value(bool(self.line[self.needle_index - self.lcam]))
-                self.needle_index += self.needle_delta
-            except IndexError:
+        if self.cams.value():
+            idx = self.needle_index - self.lcam
+            if idx < 0 or idx >= self.line_length:
                 self.led.off()
                 self.out.off()
+            else:
+                out = bool(self.line[self.needle_index - self.lcam])
+                self.led.value(out)
+                self.out.value(out)
+                self.needle_index += self.needle_delta
         #if we have left the cams:
         else:
             self.led.off()
