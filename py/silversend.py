@@ -38,7 +38,7 @@ class Silversend:
         self.led.off()
         self.out.off()
 
-        self.row_index = 0
+        self.row_index = -1
         self.needle_index = lcam-1
         self.needle_delta = 1
 
@@ -70,9 +70,9 @@ class Silversend:
 
     def cams_irq(self, pin):
         if pin.value(): # rising edge
+            self.row_index += 1
             self.dostarting = True
         else: # falling edge
-            self.row_index += 1
             self.docomplete = True
 
     def needle_irq(self, pin):
