@@ -39,10 +39,10 @@ class Silversend:
         self.out.off()
 
         self.row_index = -1
-        self.needle_index = lcam-1
+        self.needle_index = lcam
         self.needle_delta = 1
 
-        self.needle.irq(handler=self.needle_irq, trigger=Pin.IRQ_FALLING) #Update needle index, set output pin in needle pin's ISR
+        self.needle.irq(handler=self.needle_irq, trigger=Pin.IRQ_RISING) #Update needle index, set output pin in needle pin's ISR
         self.cams.irq(handler=self.cams_irq, trigger=Pin.IRQ_FALLING | Pin.IRQ_RISING) #Update row index, queue callbacks on cams pin's ISR
 
     def setcams(self, lcam, rcam):
@@ -79,9 +79,9 @@ class Silversend:
         #Are we in the cams? yes
         if self.cams.value() == 1:
             try:
-                self.needle_index += self.needle_delta
                 self.led.value(bool(self.line[self.needle_index - self.lcam]))
                 self.out.value(bool(self.line[self.needle_index - self.lcam]))
+                self.needle_index += self.needle_delta
             except IndexError:
                 self.led.off()
                 self.out.off()
@@ -91,6 +91,6 @@ class Silversend:
             self.out.off()
             #print(self.row_counter.value)
             if self.direction.value() == RIGHT:
-                self.needle_index, self.needle_delta = self.lcam-1, 1 # Will trigger before first needle
+                self.needle_index, self.needle_delta = self.lcam, 1 # Will trigger after first needle
             else:
-                self.needle_index, self.needle_delta = self.rcam+1, -1 # Will trigger before first needle
+                self.needle_index, self.needle_delta = self.rcam, -1 # Will trigger after first needle
