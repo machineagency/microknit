@@ -9,11 +9,17 @@ OUT     = 14
 NEEDLE  = 27
 DIRECTION = 26
 
+DEBUG1   = 25
+DEBUG2   = 33
+
 RIGHT, LEFT = 0, 1
 
 class Silversend:
 
     def __init__(self, lcam, rcam, newrow=None, rowcomplete=None, led=LED, clock=CLOCK, cams=CAMS, out=OUT, needle=NEEDLE, direction=DIRECTION):
+        self.debug1 = Pin(DEBUG1, Pin.OUT)
+        self.debug2 = Pin(DEBUG2, Pin.OUT)
+
         self.led = Pin(led, Pin.OUT)
         self.clock = Pin(clock, Pin.IN)          #DIN 1 ???
         self.cams = Pin(cams, Pin.IN)            #DIN 2 High inside point cams
@@ -65,6 +71,8 @@ class Silversend:
                 self.needle_counter.reset(self.lcam, 1)
             else:
                 self.needle_counter.reset(self.rcam, -1)
+        self.debug1.value(self.needle_counter.value & 0x1)
+        self.debug2.value(not self.debug2.value())
 
     def output(self):
         if (self.needle_counter.value < self.lcam) or (self.needle_counter.value > self.rcam):
