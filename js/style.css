@@ -6,19 +6,52 @@
 }
 
 body {
-  background: #fafafa;
+  background: #dddddd;
   color: #232323;
   font-family: "National Park";
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.client {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.toolbar {
+  display: flex;
 }
 
 .chart-container {
   display: flex;
+  overflow: auto;
+  padding: 6px;
 }
 
 .chart {
   display: flex;
   flex-direction: column;
   line-height: 0;
+  user-select: none;
+}
+
+.needle-numbers {
+  display: flex;
+  flex: 0 1;
+  /* outline: 1px solid black; */
+  cursor: ew-resize;
+  background: #383838;
+  font-weight: bold;
+  color: #dddddd;
+  margin: 5px 0 5px 0;
+}
+
+.needle-numbers .row-label {
+  background: #dddddd;
+  outline: unset;
 }
 
 .row {
@@ -29,6 +62,7 @@ body {
 
 .row:hover {
   outline: 3px solid black;
+  filter: brightness(0.8);
   z-index: 10;
 }
 
@@ -43,14 +77,37 @@ body {
 }
 
 .row-label {
-  background-color: white;
   width: 50px;
+
   display: flex;
   justify-content: center;
   align-items: center;
+  position: sticky;
+  outline: 1px solid black;
 }
 
-.row .stitch {
+.row-label.left {
+  left: 0;
+}
+
+.row-label.right {
+  right: 0;
+}
+
+.row-label.white {
+  background-color: white;
+}
+
+.stitch {
   aspect-ratio: 1;
   border-left: 1px solid black;
+}
+
+.needle {
+  aspect-ratio: 1;
+  border-left: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
