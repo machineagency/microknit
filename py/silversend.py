@@ -66,6 +66,8 @@ class Silversend:
 
         #if we have left the cams:
         else:
+            self.led.off()
+            self.out.off()
             #print(self.row_counter.value)
             if self.direction.value() == RIGHT:
                 self.needle_counter.reset(self.lcam, 1)
