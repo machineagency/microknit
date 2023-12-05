@@ -5,7 +5,7 @@ from py.wifi import connect
 from py.esphub import ESPHub
 from py.silversend import Silversend
 
-sids = []
+sids = set()
 
 
 
@@ -57,8 +57,14 @@ async def main():
     # Socket IO on event... this is also how you make more events
     @hub.on("subscribe")
     async def subscribe(data, sid):
-        sids.append(sid)
-        print(f"we appended the sid, they are now all {sids}!")
+        sids.add(sid)
+        print(f"we added {sid}, they are now all {sids}!")
+
+    # Socket IO on event... this is also how you make more events
+    @hub.on("unsubscribe")
+    async def subscribe(data, sid):
+        sids.remove(sid)
+        print(f"we removed {sid}, they are now all {sids}!")
 
     while True:
         try:
