@@ -54,6 +54,7 @@ class Silversend:
         self.line = line
 
     def update(self):
+        self.debug2.value(1)
         self.row_counter.update()
         self.row_complete.update()
         self.needle_counter.update()
@@ -74,7 +75,7 @@ class Silversend:
             else:
                 self.needle_counter.reset(self.rcam+1, -1) # Will trigger before first needle
         self.debug1.value(self.needle_counter.value & 0x1)
-        self.debug2.value(not self.debug2.value())
+        self.debug2.value(0)
 
     def output(self):
         if (self.needle_counter.value < self.lcam) or (self.needle_counter.value > self.rcam):
