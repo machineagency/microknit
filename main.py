@@ -19,17 +19,17 @@ async def main():
     hub = ESPHub(**esphubconf, led_pin=config["led_pin"])
     await hub.connect()
 
-    def newrow(row, pin):
+    def rowstarting(row):
         # print(f"now on row {row}")
         # Socket IO send event "rowstart" with data=row to every client in array sids
         hub.rowstart(sids, row)
 
-    def rowcomplete(row, pin):
+    def rowcomplete(row):
         print(f"row {row} completed!")
         # Socket IO send event "rowfinish" with data=row to every client in array sids
         hub.rowfinish(sids, row)
 
-    s = Silversend(-20, 20, newrow=newrow, rowcomplete=rowcomplete)
+    s = Silversend(-20, 20, rowstarting=rowstarting, rowcomplete=rowcomplete)
 
     pattern = [0, 1] * 20
     s.loadrow(pattern)
