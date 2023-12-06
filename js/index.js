@@ -127,7 +127,7 @@ function needleNumberView() {
     class="needle-numbers"
     style="height: ${GLOBAL_STATE.scale}px;">
     <div class="row-label left"></div>
-    ${Array.apply(null, Array(GLOBAL_STATE.chart.length)).map(
+    ${Array.apply(null, Array(GLOBAL_STATE.chart[0].length)).map(
       (_, needleIndex) => needleView(needleIndex)
     )}
 
