@@ -3,3 +3,4 @@ websocket-client
 python-socketio
 addict
 zenlog
+pyserial
