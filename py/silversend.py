@@ -2,14 +2,14 @@ from machine import Pin
 
 
 LED     = 2
-CLOCK   = 13
-CAMS    = 12
-OUT     = 14
-NEEDLE  = 27
-DIRECTION = 26
+CLOCK   = 36
+CAMS    = 37
+OUT     = 38
+NEEDLE  = 39
+DIRECTION = 40
 
-DEBUG1   = 25
-DEBUG2   = 33
+DEBUG1   = 41
+DEBUG2   = 42
 
 RIGHT, LEFT = 0, 1
 
