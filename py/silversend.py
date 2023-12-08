@@ -41,7 +41,7 @@ class Silversend:
 
         self.row_index = -1
         self.needle_index = lcam
-        self.needle_delta = 1
+        self.needle_delta = 1 #when we go right, we add 1, when we go left, we subtract 1
 
         self.needle.irq(handler=self.needle_irq, trigger=Pin.IRQ_RISING) #Update needle index, set output pin in needle pin's ISR
         self.cams.irq(handler=self.cams_irq, trigger=Pin.IRQ_FALLING | Pin.IRQ_RISING) #Update row index, queue callbacks on cams pin's ISR
