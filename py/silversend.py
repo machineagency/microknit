@@ -35,6 +35,7 @@ class Silversend:
         self.dostarting = False
         self.docomplete = False
 
+        self.output = False
         self.led.off()
         self.out.off()
 
@@ -54,7 +55,6 @@ class Silversend:
 
     def loadrow(self, line):
         self.line = line
-        self.line_length = len(line)
 
     def update(self):
         self.debug2.value(1)
@@ -77,23 +77,21 @@ class Silversend:
             self.docomplete = True
 
     def needle_irq(self, pin):
+        self.out.value(self.output)
+        self.led.value(self.output)
         #Are we in the cams? yes
+        self.needle_index += self.needle_delta
         if self.cams.value():
             idx = self.needle_index - self.lcam
-            if idx < 0 or idx >= self.line_length:
-                self.led.off()
-                self.out.off()
+            if idx < 0 or idx >= len(self.line):
+                self.output = 0
             else:
-                out = bool(self.line[self.needle_index - self.lcam])
-                self.led.value(out)
-                self.out.value(out)
-                self.needle_index += self.needle_delta
+                self.output = bool(self.line[idx])
         #if we have left the cams:
         else:
-            self.led.off()
-            self.out.off()
+            self.output = 0
             #print(self.row_counter.value)
             if self.direction.value() == RIGHT:
-                self.needle_index, self.needle_delta = self.lcam, 1 # Will trigger after first needle
+                self.needle_index, self.needle_delta = self.lcam, 1
             else:
-                self.needle_index, self.needle_delta = self.rcam, -1 # Will trigger after first needle
+                self.needle_index, self.needle_delta = self.rcam, -1
